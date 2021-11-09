@@ -1,4 +1,156 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
+orbs:
+  snyk: snyk/snyk@1.1.2
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - snyk/scan
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+orbs:
+  sonarcloud: sonarsource/sonarcloud@1.0.2
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - sonarcloud/scan
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - sonarcloud/scan
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+      orbs:
+  node: circleci/node@4.7.0
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - node/install
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+orbs:
+  codecov: codecov/codecov@3.2.0
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - codecov/upload
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - codecov/upload:
+          validate: false 
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+
+orbs:
+  node: circleci/node@4.7.0
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - node/install
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+orbs:
+  docker: circleci/docker@1.7.0
+jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - docker/configure-docker-credentials-store:
+          helper-name: pass 
+          helper-name: osxkeychain 
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+
+orbs:
+  heroku: circleci/heroku@1.2.6
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - heroku/check-authentication:
+          print-whoami: true 
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+      jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - heroku/check-authentication:
+          print-whoami: false 
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
+
+orbs:
+  snyk: snyk/snyk@1.1.2
+  jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - snyk/scan:
+          severity-threshold: low 
+          severity-threshold: medium 
+          severity-threshold: high 
+          severity-threshold: critical 
+          os: macos 
+          os: linux 
+          os: alpine 
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
 # See: https://circleci.com/docs/2.0/configuration-reference
 # For a detailed guide to building and testing on iOS, read the docs:
 # https://circleci.com/docs/2.0/testing-ios/
@@ -40,7 +192,7 @@ accelerometer, autoplay, camera, ch-device-memory, ch-downlink, ch-dpr, ch-ect, 
 https://accounts.shopify.com/oauth/authorize? client_id=7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775 c&destination_uuid=fdf6184b-4c7c-4160- ab1b-7d11f36a8ca8&nonce=229afc745a2f7a3b007d2598b20fe7b8&prompt=merge&re direct_uri=https://ama-sub-provider.myshopify.com/admin/auth/identity/ callback&response_type=code&scope=email https://api.shopify.com/auth/ destinations.readonly openid profile https://api.shopify.com/auth/partners.collaborator- relationships.readonly https://api.shopify.com/auth/banking.manage https:// api.shopify.com/auth/shopify-chat.admin.graphql https://api.shopify.com/auth/ flow.workflows.manage https://api.shopify.com/auth/organization- identity.manage&state=8c8edd20a078f9fd8ab527ffc8fb1693&ui_locales=en&ux=shop 
 —————————————————————————
 https://accounts.shopify.com/oauth/authorize? client_id=7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775 c&destination_uuid=fdf6184b-4c7c-4160- ab1b-7d11f36a8ca8&nonce=229afc745a2f7a3b007d2598b20fe7b8&prompt=merge&re direct_uri=https://ama-sub-provider.myshopify.com/admin/auth/identity/ callback&response_type=code&scope=email https://api.shopify.com/auth/ destinations.readonly openid profile https://api.shopify.com/auth/partners.collaborator- relationships.readonly https://api.shopify.com/auth/banking.manage https:// api.shopify.com/auth/shopify-chat.admin.graphql https://api.shopify.com/auth/ flow.workflows.manage https://api.shopify.com/auth/organization- identity.manage&state=8c8edd20a078f9fd8ab527ffc8fb1693&ui_locales=en&ux=shop 
-client_id=7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775 c&destination_uuid=fdf6184b-4c7c-4160- ab1b-7d11f36a8ca8&nonce=229afc745a2f7a3b007d2598b20fe7b8&prompt=merge&re direct_uri=https%3A%2F%2Fama-sub-provider.myshopify.com%2Fadmin%2Fauth %2Fidentity%2Fcallback&response_type=code&scope=email%20https%3A%2F %2Fapi.shopify.com%2Fauth%2Fdestinations.readonly%20openid%20profile%20https %3A%2F%2Fapi.shopify.com%2Fauth%2Fpartners.collaborator-relationships.readonly %20https%3A%2F%2Fapi.shopify.com%2Fauth%2Fbanking.manage%20https%3A 
+client_id=7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775 c&destination_uuid=fdf6184b-4c7c-4160- ab1b-7d11f36a8ca8&nonce=229afc745a2f7a3b007d2598b20fe7b8&prompt=merge&re        direct_uri=https%3A%2F%2Fama-sub-provider.myshopify.com%2Fadmin%2Fauth %2Fidentity%2Fcallback&response_type=code&scope=email%20https%3A%2F %2Fapi.shopify.com%2Fauth%2Fdestinations.readonly%20openid%20profile%20https %3A%2F%2Fapi.shopify.com%2Fauth%2Fpartners.collaborator-relationships.readonly %20https%3A%2F%2Fapi.shopify.com%2Fauth%2Fbanking.manage%20https%3A 
 %2F%2Fapi.shopify.com%2Fauth%2Fshopify-chat.admin.graphql%20https%3A%2F %2Fapi.shopify.com%2Fauth%2Fflow.workflows.manage%20https%3A%2F %2Fapi.shopify.com%2Fauth%2Forganization- identity.manage&state=8c8edd20a078f9fd8ab527ffc8fb1693&ui_locales=en&ux=shop 
 —————————————————————————
 https://ama-sub-provider.myshopify.com/ 
