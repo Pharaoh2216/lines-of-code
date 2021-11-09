@@ -1,0 +1,686 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ main ]
+  schedule:
+    - cron: '36 10 * * 3'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [  ]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+        # Learn more about CodeQL language support at https://git.io/codeql-language-support
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
+        # queries: ./path/to/local/query, your-org/your-repo/queries@main
+
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    # If this step fails, then you should remove it and run the build manually (see below)
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+
+    # ℹ️ Command-line programs to run using the OS shell.
+    # 📚 https://git.io/JvXDl
+
+    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
+    #    and modify them (or add more) to build your code if your project
+    #    uses a compiled language
+
+    #- run: |
+    #   make bootstrap
+    #   make release
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+- name: Cache
+  uses: actions/cache@v2.1.6
+  with:
+    # A list of files, directories, and wildcard patterns to cache and restore
+    path: 
+    # An explicit key for restoring and saving the cache
+    key: 
+    # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
+    restore-keys: # optional
+    # The chunk size used to split up large files during upload, in bytes
+    upload-chunk-size: # optional
+    - name: Upload a Build Artifact
+  uses: actions/upload-artifact@v2.2.4
+  with:
+    # Artifact name
+    name: # optional, default is artifact
+    # A file, directory or wildcard pattern that describes what to upload
+    path: 
+    # The desired behavior if no files are found using the provided path.
+Available Options:
+  warn: Output a warning but do not fail the action
+  error: Fail the action with an error message
+  ignore: Do not output any warnings or errors, the action does not fail
+
+    if-no-files-found: # optional, default is warn
+    # Duration after which artifact will expire in days. 0 means using default retention.
+Minimum 1 day. Maximum 90 days unless changed from the repository settings page.
+
+    retention-days: # optional
+    - name: Setup Go environment
+  uses: actions/setup-go@v2.1.4
+  with:
+    # The Go version to download (if necessary) and use. Supports semver spec and ranges.
+    go-version: # optional
+    # Whether to download only stable versions
+    stable: # optional, default is true
+    # Used to pull node distributions from go-versions.  Since there's a default, this is typically not supplied by the user.
+    token: # optional, default is ${{ github.token }}
+    - name: Setup Java JDK
+  uses: actions/setup-java@v2.3.1
+  with:
+    # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+    java-version: 
+    # Java distribution. See the list of supported distributions in README file
+    distribution: 
+    # The package type (jdk, jre, jdk+fx, jre+fx)
+    java-package: # optional, default is jdk
+    # The architecture of the package
+    architecture: # optional, default is x64
+    # Path to where the compressed JDK is located
+    jdkFile: # optional
+    # Set this option if you want the action to check for the latest available version that satisfies the version spec
+    check-latest: # optional
+    # ID of the distributionManagement repository in the pom.xml file. Default is `github`
+    server-id: # optional, default is github
+    # Environment variable name for the username for authentication to the Apache Maven repository. Default is $GITHUB_ACTOR
+    server-username: # optional, default is GITHUB_ACTOR
+    # Environment variable name for password or token for authentication to the Apache Maven repository. Default is $GITHUB_TOKEN
+    server-password: # optional, default is GITHUB_TOKEN
+    # Path to where the settings.xml file will be written. Default is ~/.m2.
+    settings-path: # optional
+    # Overwrite the settings.xml file if it exists. Default is "true".
+    overwrite-settings: # optional, default is true
+    # GPG private key to import. Default is empty string.
+    gpg-private-key: # optional
+    # Environment variable name for the GPG private key passphrase. Default is $GPG_PASSPHRASE.
+    gpg-passphrase: # optional
+    # Name of the build platform to cache dependencies. It can be "maven" or "gradle".
+    cache: # optional
+    # Workaround to pass job status to post job step. This variable is not intended for manual setting
+    job-status: # optional, default is ${{ job.status }}
+    - name: Download a Build Artifact
+  uses: actions/download-artifact@v2.0.10
+  with:
+    # Artifact name
+    name: # optional
+    # Destination path
+    path: # optional
+    - name: Codacy Analysis CLI
+  # You may pin to the exact commit or the version.
+  # uses: codacy/codacy-analysis-cli-action@0de770495bd94bdac1ba7d5043a72b252ddbeec3
+  uses: codacy/codacy-analysis-cli-action@4.0.0
+  with:
+    # Run with verbose output
+    verbose: # optional
+    # API project token to retrieve your remote Codacy configuration for the project being analyzed
+    project-token: # optional
+    # API account token to retrieve your remote Codacy configuration for the project being analyzed
+    api-token: # optional
+    # Codacy's API URL, to retrieve your remote Codacy configuration
+    codacy-api-base-url: # optional
+    # Format of the output file
+    format: # optional
+    # Send analysis results to an output file
+    output: # optional
+    # The directory to be analyzed
+    directory: # optional
+    # Number of tools to run in parallel
+    parallel: # optional
+    # Maximum number of issues allowed for the analysis to succeed
+    max-allowed-issues: # optional, default is 2147483647
+    # The name of the tool to analyze the code
+    tool: # optional
+    # Maximum time each tool has to execute
+    tool-timeout: # optional
+    # Upload analysis results to Codacy
+    upload: # optional
+    # Fail the analysis if any tool fails to run
+    fail-if-incomplete: # optional
+    # Allow network access for tools
+    allow-network: # optional
+    # Force files to be readable by changing the permissions before running the analysis
+    force-file-permissions: # optional
+    # Reduce issue severity by one level, for non-security issues, for compatibility with GitHub's code scanning feature. This option will only have an effect when used in conjunction with '--format sarif'.
+    gh-code-scanning-compat: # optional
+    # Run dockerized tools. Possible values (true|false) Check the full list in https://docs.codacy.com/repositories-configure/codacy-configuration-file/#which-tools-can-be-configured-and-which-name-should-i-use
+    run-docker-tools: # optional, default is true
+    # Run GoSec. Possible values (true|false)
+    run-gosec: # optional
+    # Run StaticCheck. Possible values (true|false)
+    run-staticcheck: # optional
+    # Path to a file containing the output of Clang Tidy.
+    clang-tidy-output: # optional
+    # Path to a file containing the output of Faux Pas.
+    faux-pas-output: # optional
+    - name: SonarCloud Scan
+  # You may pin to the exact commit or the version.
+  # uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
+  uses: SonarSource/sonarcloud-github-action@v1.6
+  with:
+    # Additional arguments to the sonarcloud scanner
+    args: # optional
+    # Set the sonar.projectBaseDir analysis property
+    projectBaseDir: # optional, default is .
+    
+  - name: Domain and SSL cert watcher
+  # You may pin to the exact commit or the version.
+  # uses: codex-team/action-check-domain@f01efda3949e9dc02364635ce0798c469aa99be7
+  uses: codex-team/action-check-domain@v1.2
+  with:
+    # Site domain to be checked (with protocol)
+    url: 
+    - name: Honeycomb Buildevents
+  # You may pin to the exact commit or the version.
+  # uses: kvrhdn/gha-buildevents@b1b329d03da736da7a443273079e3aa420e82e7a
+  uses: kvrhdn/gha-buildevents@v1.0.5
+  with:
+    # A Honeycomb API key - needed to send traces.
+    apikey: 
+    # The Honeycomb dataset to send traces to.
+    dataset: 
+    # The job status.
+    job-status: 
+    # Set this to a key unique for this matrix cell, only useful when using a build matrix.
+    matrix-key: # optional
+    
+    - name: HTTP(s) URL health check and TLS/SSL certification expiry check
+  # You may pin to the exact commit or the version.
+  # uses: padurean/https-certificate-expiry-health-check-action@e3d52fe902a76c7fad2336e8e6e5c3589dfc9bf3
+  uses: padurean/https-certificate-expiry-health-check-action@v1.0.0
+  with:
+    # Target URL(s), split by |
+    url: 
+    # Number of failed requests before giving up
+    max-attempts: # optional, default is 1
+    # Delay duration between retries (e.g. 5s, 1m)
+    retry-delay: # optional, default is 3s
+    # Follow redirect if the response has a 3XX status code
+    follow-redirect: # optional, default is false
+    # 
+    check-cert: # optional, default is false
+    # 
+    max-cert-days-left: # optional, default is 1
+    # 
+    port: # optional, default is 443
+    
+    - name: Subdomain finding using subfinder
+  # You may pin to the exact commit or the version.
+  # uses: v1dhun/subfinder-action@967b0b41df1ec5b094e5f0ce71bf7111be4a8d08
+  uses: v1dhun/subfinder-action@v.0.4
+  with:
+    # List of domains to run subfinder
+    domains-list: 
+    # Telegram chat id to send notifications
+    telegram-chat-id: # optional
+    # Telegram bot token to send notifications
+    telegram-token: # optional
+    # To check host is alive or not using httpx
+    check-alive: # optional, default is false
+    - name: Debugging with ssh
+  # You may pin to the exact commit or the version.
+  # uses: lhotari/action-upterm@20dff461519063b91a41ec04cb5bc70f169110d7
+  uses: lhotari/action-upterm@v1
+  
+  - name: URL Health Check
+  # You may pin to the exact commit or the version.
+  # uses: Jtalk/url-health-check-action@9f9a163f533fcbf8b3d9fe1bf5458e8c23502698
+  uses: Jtalk/url-health-check-action@v2
+  with:
+    # Target URL(s), split by |
+    url: 
+    # Number of unsuccessful attempts to call URL before giving up
+    max-attempts: # optional, default is 1
+    # Time between attempts (e.g. 3s, 1m)
+    retry-delay: # optional, default is 3s
+    # Follow redirected location in case request resulted in 3XX status code
+    follow-redirect: # optional, default is false
+    # Retry all errors, including 4xx (see man curl on --retry-all-errors).
+This might upgrade curl to the version supporting this flag.
+
+    retry-all: # optional, default is false
+    - name: Azure Monitor Action
+  # You may pin to the exact commit or the version.
+  # uses: hoisjp/azure-monitor-action@5231c163ca546f6673c24a0399b0722f6d33fb0f
+  uses: hoisjp/azure-monitor-action@0.1.0
+  with:
+    # workspace ID of your Log Analytics workspace
+    workspace-id: 
+    # Agent key of your Log Analytics workspace
+    agent-key: 
+    # JSON string to post to Log Analytics
+    json-body: 
+    
+    - name: Datadog Action
+  # You may pin to the exact commit or the version.
+  # uses: masci/datadog@b7120a1e4512c38c910fd5af788e1137dd37b4a3
+  uses: masci/datadog@v1.3.2
+  with:
+    # A valid Datadog API Key
+    api-key: 
+    # The URL of the API endpoint, defaults to US datacenter
+    api-url: # optional, default is https://api.datadoghq.com
+    # A list of metrics objects to send, see docs for details
+    metrics: # optional, default is []
+    # A list of event objects to send, see docs for details
+    events: # optional, default is []
+    # A list of service check objects to send, see docs for details
+    service-checks: # optional, default is []
+    # The URL of the Log API endpoint, defaults to JSON or plain text format over HTTPS
+    log-api-url: # optional, default is https://http-intake.logs.datadoghq.com
+    # A list of log objects to send, see docs for details
+    logs: # optional, default is []
+    
+    - name: GraphQL Inspector
+  # You may pin to the exact commit or the version.
+  # uses: kamilkisiela/graphql-inspector@f37884ddec4d992e82a14bbbce221e7dbfa48569
+  uses: kamilkisiela/graphql-inspector@v3.0.2
+  with:
+    # The name of the check ("GraphQL Inspector" by default).
+In case of multiple GraphQL Inspector Actions, use `name` to prevent GitHub from overwriting results.
+For example, "Check Public API" and "Check Internal API".
+
+    name: # optional
+    # Use annotation (enabled by default)
+    annotations: # optional
+    # Fail on breaking changes (enabled by default)
+    fail-on-breaking: # optional
+    # Label to mark Pull Request introducing breaking changes as safe and expected ("approved-breaking-change" by default)
+    approve-label: # optional
+    # Ref and Path to GraphQL Schema (e.g. "master:schema.graphql")
+
+* Ref is needed where 'endpoint' is not defined
+* Can be URL to the GraphQL API - should represent the "after" schema. Available only if 'endpoint' is defined. Has to start with http(s).
+
+    schema: 
+    # An url to the GraphQL API. It should represent the "before" schema.
+
+When using an endpoint, 'schema' should point to a file (without a reference - branch name for example)
+
+    endpoint: # optional
+    # Github Token. Use {{ github.token }} by default
+    github-token: # optional, default is ${{ github.token }}
+    # Merge Pull Request's branch with the target branch to get the schema.
+Helps to get the correct state of schema when Pull Request is behind the target branch
+
+(enabled by default)
+
+    experimental_merge: # optional
+    - name: Deploy Environment
+  # You may pin to the exact commit or the version.
+  # uses: parasoft/deploy-environment-action@486e9382c6c2958fcbaad60b895da799d16730c2
+  uses: parasoft/deploy-environment-action@1.0.2
+  with:
+    # CTP URL
+    ctpUrl: 
+    # CTP Username
+    ctpUsername: 
+    # CTP Password
+    ctpPassword: 
+    # Name of the system
+    system: 
+    # Name of the environment
+    environment: 
+    # Name of the environment instance to provision
+    instance: 
+    # Fail action and abort on provisioning failure
+    abortOnFailure: # optional
+    # Virtual assets in the environment will be replicated on another server
+    copyToVirtualize: # optional
+    # The environment assets will be copied to a Virtualize server matching this name
+    virtServerName: # optional
+    # The name for the replicated environment can be used to later destroy the environment
+    newEnvironmentName: # optional
+    # Duplicate associated data repositories before provisioning
+    duplicateDataRepo: # optional
+    # Where to duplicate data repository
+    duplicateType: # optional
+    # The host of the data repository server
+    repoHost: # optional
+    # The port of the data repository server
+    repoPort: # optional
+    # The username of the data repository server
+    repoUsername: # optional
+    # The password of the data repository server
+    repoPassword: # optional
+    - name: Disconnect Server
+  # You may pin to the exact commit or the version.
+  # uses: parasoft/disconnect-server-action@38f96c12af08dfa3bde1a417382cad62c41cd9fb
+  uses: parasoft/disconnect-server-action@1.0.2
+  with:
+    # CTP URL
+    ctpUrl: 
+    # CTP Username
+    ctpUsername: 
+    # CTP Password
+    ctpPassword: 
+    # Used to specify server by host or name
+    serverMatch: 
+    # Host or name of the server
+    server: 
+    
+    - name: Run Parasoft C/C++test
+  # You may pin to the exact commit or the version.
+  # uses: parasoft/run-cpptest-action@aeb0150eeb0f96098ad3bac53609fd462f88c4f6
+  uses: parasoft/run-cpptest-action@1.0.1
+  with:
+    # Installation folder of Parasoft C/C++test. If not specified, the cpptestcli executable must be added to $PATH.
+    installDir: # optional
+    # Working directory for running C/C++test.
+    workingDir: # optional, default is ${{ github.workspace }}
+    # Identifier of a compiler configuration. Ensure you specify the configuration that matches your compiler.
+    compilerConfig: # optional, default is gcc_9-64
+    # Test configuration to be used for code analysis.
+    testConfig: # optional, default is builtin://Recommended Rules
+    # Output folder for reports from code analysis.
+    reportDir: # optional, default is reports
+    # Format of reports from code analysis.
+    reportFormat: # optional, default is xml,html,sarif
+    # Input scope for analysis (typically, cpptestscan.bdf or compile_commands.json, depending on the project type and the build system).
+    input: # optional, default is cpptestscan.bdf
+    # Additional parameters for the cpptestcli executable.
+    additionalParams: # optional, default is 
+    # Command line pattern for running C/C++test.
+    commandLinePattern: # optional, default is ${cpptestcli} -compiler "${compilerConfig}" -config "${testConfig}" -property report.format=${reportFormat} -report "${reportDir}" -module . -input "${input}" ${additionalParams}
+    
+    - name: Run Parasoft C/C++test
+  # You may pin to the exact commit or the version.
+  # uses: parasoft/run-cpptest-action@aeb0150eeb0f96098ad3bac53609fd462f88c4f6
+  uses: parasoft/run-cpptest-action@1.0.1
+  with:
+    # Installation folder of Parasoft C/C++test. If not specified, the cpptestcli executable must be added to $PATH.
+    installDir: # optional
+    # Working directory for running C/C++test.
+    workingDir: # optional, default is ${{ github.workspace }}
+    # Identifier of a compiler configuration. Ensure you specify the configuration that matches your compiler.
+    compilerConfig: # optional, default is gcc_9-64
+    # Test configuration to be used for code analysis.
+    testConfig: # optional, default is builtin://Recommended Rules
+    # Output folder for reports from code analysis.
+    reportDir: # optional, default is reports
+    # Format of reports from code analysis.
+    reportFormat: # optional, default is xml,html,sarif
+    # Input scope for analysis (typically, cpptestscan.bdf or compile_commands.json, depending on the project type and the build system).
+    input: # optional, default is cpptestscan.bdf
+    # Additional parameters for the cpptestcli executable.
+    additionalParams: # optional, default is 
+    # Command line pattern for running C/C++test.
+    commandLinePattern: # optional, default is ${cpptestcli} -compiler "${compilerConfig}" -config "${testConfig}" -property report.format=${reportFormat} -report "${reportDir}" -module . -input "${input}" ${additionalParams}
+    
+    - name: Run Parasoft Jtest
+  # You may pin to the exact commit or the version.
+  # uses: parasoft/run-jtest-action@8883f9f725f0b161ceb49364714a3f8d15502587
+  uses: parasoft/run-jtest-action@0.0.2
+  with:
+    # Installation folder of Parasoft Jtest. If not specified, the cpptestcli executable must be added to PATH.
+    installDir: # optional
+    # Working directory for running Jtest.
+    workingDir: # optional, default is ${{ github.workspace }}
+    # Test configuration to be used for code analysis.
+    testConfig: # optional, default is builtin://Recommended Rules
+    # Output folder for reports from code analysis.
+    reportDir: # optional, default is reports
+    # Format of reports from code analysis.
+    reportFormat: # optional, default is xml,html,sarif
+    # Input scope for analysis.
+    input: # optional, default is jtest.data.json
+    # Additional parameters for the jtestcli executable.
+    additionalParams: # optional, default is 
+    
+    - name: APIsec Scan
+  # You may pin to the exact commit or the version.
+  # uses: apisec-inc/apisec-run-scan@285318158d752e4a486f1967602e4ede36384d49
+  uses: apisec-inc/apisec-run-scan@v1.0.3
+  with:
+    # The APIsec username with which the scans will be executed
+    apisec-username: # default is 
+    # The Password of the APIsec user with which the scans will be executed
+    apisec-password: # default is 
+    # The Name of the project for security scan
+    apisec-project: # default is 
+    # The Name of the scan profile to be executed
+    apisec-profile: # optional, default is Master
+    # The location the scan will be executed in
+    apisec-region: # optional, default is 
+    
+    - name: XCAudit
+  # You may pin to the exact commit or the version.
+  # uses: Alexander-Ignition/XCAudit@dc904e8f194289732ae65ce10463ad52338ddb9d
+  uses: Alexander-Ignition/XCAudit@0.1.3
+  
+  - name: Code Risk Analyzer
+  # You may pin to the exact commit or the version.
+  # uses: Fizz-Q/code-risk-analyzer@e4b29d83766e60be128049af2764e3aa9df14b64
+  uses: Fizz-Q/code-risk-analyzer@v1.23
+  with:
+    # full repo name to analyze - use github.repository variable
+    repository: 
+    # user for repo access - use github.repository_owner variable
+    user: 
+    # github api token - use secrets.GITHUB_TOKEN variable
+    github_token: 
+    
+    - name: Set up gcloud Cloud SDK environment
+  # You may pin to the exact commit or the version.
+  # uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+  uses: google-github-actions/setup-gcloud@v0.2.0
+  with:
+    # Version of the gcloud SDK to install. If unspecified or set to "latest",
+the latest available gcloud SDK version for the target platform will be
+installed. Example: "290.0.1".
+    version: # optional, default is latest
+    # Service account email address to use for authentication. This is required
+for legacy .p12 keys but can be omitted for .json keys. This is usually of
+the format <name>@<project-id>.iam.gserviceaccount.com.
+    service_account_email: # optional
+    # Service account key to use for authentication. This should be the JSON
+formatted private key which can be exported from the Cloud Console. The
+value can be raw or base64-encoded.
+    service_account_key: # optional
+    # ID of the Google Cloud project. If provided, this will configure gcloud to
+use this project ID by default for commands. Individual commands can still
+override the project using the --project flag which takes precedence.
+    project_id: # optional
+    # Export the provided credentials as Google Default Application Credentials.
+This will make the credentials available to later steps via the
+GOOGLE_APPLICATION_CREDENTIALS environment variable. Future steps that
+consume Default Application Credentials will automatically detect and use
+these credentials.
+    export_default_credentials: # optional
+    
+    - name: Code Inspector GitHub action
+  # You may pin to the exact commit or the version.
+  # uses: codeinspectorio/github-action@01c818be303e2c4bcec991ca1c51feab753a1e2a
+  uses: codeinspectorio/github-action@v1
+  with:
+    # Token to checkout the repository.
+    repo_token: 
+    # Access key on Code Inspector
+    code_inspector_access_key: 
+    # Secret key on Code Inspector
+    code_inspector_secret_key: 
+    # Minimum grade. Valid options are EXCELLENT, GOOD, NEUTRAL, WARNING, CRITICAL. Leave blank to ignore.
+    min_quality_grade: # default is 
+    # Minimum quality score from 0 (worst) to 100 (best)
+    min_quality_score: # default is 0
+    # Maximum defect rate per line of code (e.g. 0.01 for 1 defect per 100 lines of code). Leave 0 to ignore.
+    max_defects_rate: # default is 0
+    # Maximum number of complex functions rate (e.g. number of complex functions / number of functions). Leave 0 to ignore.
+    max_complex_functions_rate: # default is 0
+    # Maximum number of long functions rate (e.g. number of long functions / number of functions). Leave 0 to ignore.
+    max_long_functions_rate: # default is 0
+    # Project on code inspector. Will use the preferences of this analysis. Leave blank and no preferences are used
+    project_name: # default is 
+    # Timeout before giving up (in case analysis takes too long). Default is 10 minutes
+    max_timeout_sec: # default is 600
+    
+    - name: Issue projector
+  # You may pin to the exact commit or the version.
+  # uses: dhruvkb/issue-projector@a41869a5f54a20362ae2a5fbe90d3fb07203e559
+  uses: dhruvkb/issue-projector@0.0.7
+  with:
+    # An authorised Personal Access Token from GitHub
+    ACCESS_TOKEN: 
+    # The GitHub username of the organisation
+    ORG_NAME: 
+    # The number of the project board within the org
+    PROJECT_NUMBER: 
+    # The name of the column within the project board
+    COLUMN_NAME: 
+    # The number of the excluded project within the org
+    EXCLUDED_PROJECT_NUMBER: # optional, default is -1
+    # Whether to find new issues, PRs or both
+    ISSUE_TYPE: # optional, default is any
+    # The time interval to check for updated issues
+    INTERVAL: # optional, default is 1
+    # The unit of the time interval to check for updated issues
+    INTERVAL_UNIT: # optional, default is d
+    
+    - name: Changelog Parser
+  # You may pin to the exact commit or the version.
+  # uses: coditory/changelog-parser@4f567c6914ee75eff434b4d946393dfd254f8f98
+  uses: coditory/changelog-parser@v1
+  with:
+    # Path to the changelog file. By default standard changelog locations are used.
+    path: # optional, default is 
+    # Version of the changelog entry. By default the last released version is used.
+    version: # optional, default is 
+    
+    - name: WakaTime Stat Update Action
+  # You may pin to the exact commit or the version.
+  # uses: avinal/Profile-Readme-WakaTime@c8465a8a2f2e6306191281c7f28cdb1387e2c6a3
+  uses: avinal/Profile-Readme-WakaTime@v3.0
+  with:
+    # Your WakaTime API Key
+    WAKATIME_API_KEY: 
+    # GitHub access token
+    GITHUB_TOKEN: # default is ${{ github.token }}
+    # Which branch is used for saving images
+    BRANCH: # optional, default is master
+    # Manual commit messages
+    COMMIT_MSG: # optional, default is Automated Coding Activity Update :alien:
+    
+    - name: Arduino sketch.json parser
+  # You may pin to the exact commit or the version.
+  # uses: alldevic/arduino-sketchjson-parser@356f20c8cb7c3ecfdb153d3a20f7c4fe8673d1b3
+  uses: alldevic/arduino-sketchjson-parser@v1
+  with:
+    # sketch.json file location
+    sketchjson: # optional, default is sketch.json
+    
+    - name: Issues Translator
+  # You may pin to the exact commit or the version.
+  # uses: usthe/issues-translate-action@ac9866e08b906c9a893aaa747696eb4168801443
+  uses: usthe/issues-translate-action@v2.6
+  with:
+    # The issue comment bot GITHUB_TOKEN.
+    BOT_GITHUB_TOKEN: # optional
+    # The issue comment bot github login name.
+    BOT_LOGIN_NAME: # optional
+    # Is need modify issue title, true or false, default false.
+    IS_MODIFY_TITLE: # optional
+    # Custom bot note message.
+    CUSTOM_BOT_NOTE: # optional
+    
+    - name: Check for Changed Files
+  # You may pin to the exact commit or the version.
+  # uses: brettcannon/check-for-changed-files@551263a821fde32615499b71f9283a7e98fcc657
+  uses: brettcannon/check-for-changed-files@v1.1.0
+  with:
+    # Glob pattern for changed file to check for
+    file-pattern: 
+    # Glob pattern that guards whether the action will run
+    prereq-pattern: # optional
+    # Label to trigger skipping the check
+    skip-label: # optional
+    # String template used when the check fails
+    failure-message: # optional, default is the prerequisite file pattern ${prereq-pattern} matched changed files in the pull request, but the ${file-pattern} pattern did NOT and the ${skip-label} label is not set
+    
+    - name: Hacker Laws Action
+  # You may pin to the exact commit or the version.
+  # uses: umutphp/hacker-laws-action@9b5269e13ce061599079a92c1766a43dbe7fb974
+  uses: umutphp/hacker-laws-action@v1
+  
+  - name: Label Mastermind
+  # You may pin to the exact commit or the version.
+  # uses: Videndum/label-mastermind@a89e815845b6477af418660b500cc4765bb16608
+  uses: Videndum/label-mastermind@1.4.0-alpha.5
+  with:
+    # The GITHUB_TOKEN secret
+    GITHUB_TOKEN: 
+    # Config file path
+    config: # optional, default is .github/config.json
+    # JSON string with configuration data
+    configJSON: # optional, default is 
+    # Fill Empty context configuration with shared configs
+    fillEmpty: # optional, default is true
+    # Skip deleting labels from repository
+    skipDelete: # optional, default is false
+    # Allows the running off action without it doing effects
+    dryRun: # optional, default is false
+    
+    - name: Project Activity
+  # You may pin to the exact commit or the version.
+  # uses: adgcz/project-activity@6bc58b06e25670c15a175e34326d0c0baa73da47
+  uses: adgcz/project-activity@v1.0.3
+  with:
+    # Github Token
+    token: 
+    # SMTP server
+    smtp-server: 
+    # SMTP server port
+    smtp-server-port: 
+    # Sender user email
+    auth-user: 
+    # Sender user password (for gmail generate and use an app password)
+    auth-pwd: 
+    # Sender from name
+    email-from: 
+    # Recipents email addresses (comma-separated)
+    recipient-emails: 
+    # Project Numbers (comma-separated list, or, all)
+    project-numbers: 
+    # Days back, from run date, of project activity to summarise
+    days: 
+    
+    
